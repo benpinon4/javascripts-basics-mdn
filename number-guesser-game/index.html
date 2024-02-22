@@ -1,0 +1,89 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Number Guessing Game</title>
+    <style>
+      h1 {
+        margin-left: 25%;
+        color: brown;
+      }
+      p {
+        margin-left: 10%;
+        font-weight: bolder;
+      }
+      div {
+        margin-left: 20%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Number Guessing Game</h1>
+    <p>
+      We have selected a random number between 1 and 100. See if you can guess
+      it in 10 turns or fewer. We'll tell you if your guess was too high or too
+      low.
+    </p>
+
+    <div>
+      <input type="number" max="100" />
+      <button>Submit Number</button>
+      <p id="try-list"></p>
+    </div>
+    <script>
+      let button = document.querySelector("button");
+      let guessfield = document.body.querySelector("input");
+      let resetButton = document.createElement("button");
+      let guessMessageParagraph = document.createElement("p");
+      let guessAttemptsMessage = document.createElement("p");
+      let div = document.querySelector("div");
+      let listOfTrys = document.getElementById("try-list");
+      let correctNumber = Math.round(Math.random() * 100);
+
+      let previousGuessArray = [];
+      let guessAttempts = 1;
+      div.appendChild(guessMessageParagraph);
+      div.appendChild(guessAttemptsMessage);
+      resetButton.textContent = "Start Over";
+        console.log(correctNumber)
+
+      function numberGuesser() {
+        let guess = Number(guessfield.value);
+
+        if (guess > 100 || guessfield.value == 0) {
+          guessMessageParagraph.textContent =
+            "Please select a number between 1 and 100.";
+        } else if (guessAttempts < 10 && guess != correctNumber) {
+          previousGuessArray = [...previousGuessArray, guess];
+          let guessMessage = guess > correctNumber ? "Try Lower" : "Try Higher";
+          guessMessageParagraph.textContent = guessMessage;
+          listOfTrys.textContent = "Previous Guesses: " + previousGuessArray;
+          guessfield.value = "";
+          guessAttempts++;
+          guessAttemptsMessage.textContent =
+            "Guess Attempts: " + Number(guessAttempts - 1);
+        } else if (guessAttempts >= 10) {
+          div.appendChild(resetButton);
+          guessAttemptsMessage.textContent =
+            "Guess Attempts: " + Number(guessAttempts);
+          guessMessageParagraph.textContent =
+            "You have exceeded your guess attempts. Click Start Over to play again.";
+          resetButton.addEventListener("click", () => {
+            location.reload();
+          });
+        } else if (guessAttempts < 10 && guess == correctNumber) {
+          guessMessageParagraph.textContent =
+            "Congrats you choose the right number. Click Start Over to play again.";
+          guessAttemptsMessage.textContent =
+            "Guess Attempts: " + Number(guessAttempts);
+          div.appendChild(resetButton);
+          resetButton.addEventListener("click", () => {
+            location.reload();
+          });
+        }
+      }
+
+      button.addEventListener("click", numberGuesser);
+    </script>
+  </body>
+</html>
